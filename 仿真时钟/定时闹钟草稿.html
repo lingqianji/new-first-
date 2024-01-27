@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <audio id="audio" src="./仿真时钟/rabbit dance.mp3"></audio>
+</body>
+<script>
+
+    const clockTime=document.createElement("button")
+    clockTime.style.height=20+"px"
+    clockTime.style.width=50+"px"
+    document.body.appendChild(clockTime)
+    function clockTimeAppear(){
+    var hour2
+    var minute2
+    var second2
+    var ccc=0
+
+    function trueHour(){
+        const hourp=prompt('请输入设置的 时（0~23）')
+        if(hourp==null){
+            ccc++
+            return
+        }
+        let reg=/^[0-9]$|^1[0-9]$|^2[0-3]$/
+        let result=reg.test(hourp)
+        if(result){
+            hour2=hourp
+        }else{
+            alert('错误输入')
+            trueHour()
+        }
+    }
+    trueHour()
+
+    function trueMinute(){
+        const minutep=prompt('请输入设置的 分（0~59）')
+        if(minutep==null){
+            ccc++
+            return
+        }
+        let reg=/^[0-9]$|^[1-5][0-9]$/
+        let result=reg.test(minutep)
+        if(result){
+            minute2=minutep
+        }else{
+            alert('错误输入')
+            trueMinute()
+        }
+    }
+    trueMinute()
+
+    function trueSecond(){
+        const secondp=prompt('请输入设置的 秒（0~59）')
+        if(secondp==null){
+            ccc++
+            return
+        }
+        let reg=/^[0-9]$|^[1-5][0-9]$/
+        let result=reg.test(secondp)
+        if(result){
+            second2=secondp
+        }else{
+            alert('错误输入')
+            trueSecond()
+        }
+    }
+    trueSecond()
+
+
+    if(ccc!==0){
+        return
+    }
+        clockTime.style.display="none"
+        const date=new Date()
+        const getHour=date.getHours()
+        const getMinute=date.getMinutes()
+        const getSecond=date.getSeconds()
+
+        let h=hour2-getHour
+        let m=minute2-getMinute
+        let s=second2-getSecond
+
+        // if(h<0||m<0||s<0){
+            if(s<0){
+                s=s+60
+                m=m-1
+            }
+            if(m<0){
+                m=m+60
+                h=h-1
+            }
+            if(h<0){
+                h=h+24
+            }
+
+        // }
+
+        const xxx=setTimeout(()=>{
+            document.getElementById("audio").play();
+        },h*3600000+m*60000+s*1000)
+
+    const endClock=document.createElement("button")
+    endClock.style.height=20+"px"
+    endClock.style.width=50+"px"
+    document.body.appendChild(endClock)
+        function endClockAppear(){
+            clearTimeout(xxx)
+            document.getElementById("audio").pause();
+            clockTime.style.display="inline"
+            endClock.style.display="none"
+        }
+    endClock.onclick=endClockAppear
+    endClock.innerHTML="关闭"
+    }
+
+
+    
+    clockTime.onclick=clockTimeAppear
+    clockTime.innerHTML="闹钟"
+
+</script>
+</html>

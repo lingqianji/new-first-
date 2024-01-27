@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿真时钟</title>
+</head>
+<style>
+    *{
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+    }
+    .clock{
+        background: url(./image/clock.jpg) no-repeat;
+        margin: auto;
+        width: 600px;
+        height: 600px;
+        position: relative;
+        z-index: -1;
+    }
+    .hour{
+        background-color: black;
+        width: 12px;
+        height: 80px;
+        position: absolute;
+        left: 286px;
+        top: 223px;
+        border-radius: 50%;
+    }
+    .minute{
+        background-color: gray;
+        width: 8px;
+        height: 120px;
+        position: absolute;
+        left: 288px;
+        top: 198px;
+        border-radius: 50%;
+    }
+    .second{
+        background-color: red;
+        width: 5px;
+        height: 160px;
+        position: absolute;
+        left: 290px;
+        top: 183px;
+        border-radius: 40%;
+    }
+    .aliceNew{
+        background: url(./image/alice1.jpg) no-repeat center;
+        height: 150px;
+        width: 150px;
+        position: absolute;
+        background-size: contain;
+        left: 217px;
+        top: 168px;
+    }
+    #realTime{
+        height: 50px;
+        width: 50px;
+        background-color: blue;
+    }
+    #aliceAppear{
+        position: absolute;
+        z-index: -1;
+    }
+
+    #video{
+        position: absolute;
+        left: 100px;
+        top: 0px;
+        width: 50%;
+        height: 50%;
+    }
+
+    #call{
+        width: 200px;
+        height: 100px;
+    }
+</style>
+
+
+<body>
+    <div class="clock">
+        <div class="aliceNew"></div>
+        <div class="hour"></div>
+        <div class="minute"></div>
+        <div class="second"></div>
+    </div>
+    <div id="real"></div>
+    <button id="call"></button>
+    <div id="alice2"><img id="aliceAppear" src=""></div>
+    <audio id="audio" src="./rabbit dance.mp3"></audio>
+    <div id="video"><video src="./跳舞.mp4" controls id="aDance"></video></div>
+</body>
+
+<script>
+    const real=document.getElementById('real')
+
+    var date=new Date()
+    var hour=date.getHours()
+    var minute=date.getMinutes()
+    var second=date.getSeconds()
+
+    function calcultae(){
+        date=new Date()
+        hour=date.getHours()
+        minute=date.getMinutes()
+        second=date.getSeconds()
+    }
+
+    function time(){
+        calcultae()
+        if(hour>=12){
+            hour-=12
+        }
+        let hourT = document.querySelector('.hour')
+        let minuteT = document.querySelector('.minute')
+        let secondT = document.querySelector('.second')
+
+        hourT.style.transform = `rotate(${(hour+minute/60)*30}deg) translateY(-35px)` 
+        minuteT.style.transform = `rotate(${(minute+second/60)*6}deg) translateY(-35px)` 
+        secondT.style.transform = `rotate(${second*6}deg) translateY(-35px)` 
+    }
+    time()
+    setInterval(()=>{
+        time()
+    })
+
+    const call=document.getElementById('call')
+    call.innerText="召唤Alice小助手";
+    //最喜欢Alice的一个函数
+    function callAlice(){
+        const aliceAppear=document.getElementById('aliceAppear')
+        aliceAppear.style.height="100px"
+        aliceAppear.style.width="100px"
+        aliceAppear.src="./image/alice2.gif"
+        aliceAppear.style.display="block"
+        call.style.display="none"
+        var num=0
+        var n=0
+        var endTime
+        var start
+        var timeBox
+
+        document.addEventListener("mousemove",(event) => {
+            aliceAppear.style.left=event.x+"px"
+            aliceAppear.style.top=event.y+"px"
+        })
+
+        const realTime=document.createElement("button")
+        realTime.style.height=20+"px"
+        realTime.style.width=80+"px"
+        document.body.appendChild(realTime)
+        function realTimeAppear(){
+            real.style.display="inline"
+            realTime.style.display="none"
+            function time2(){
+            let date=new Date()
+            let hour=date.getHours()
+            let minute=date.getMinutes()
+            let second=date.getSeconds()
+            real.innerHTML=parseInt(hour)+"时"+parseInt(minute)+"分"+parseInt(second)+"秒"
+            real.style.height=100+"px"
+            real.style.width=140+"px"
+            real.style.color="green"
+            }
+            time2()
+            endTime=setInterval(()=>{
+                time2()
+                num++;
+                if(num%3===0){
+                    clearInterval(endTime)
+                    real.style.display="none"
+                    realTime.style.display="inline"
+                }
+            },1000)
+        }
+        realTime.onclick=realTimeAppear
+        realTime.innerHTML="显示时间"
+
+
+    const clockTime=document.createElement("button")
+    clockTime.style.height=20+"px"
+    clockTime.style.width=50+"px"
+    document.body.appendChild(clockTime)
+    function clockTimeAppear(){
+    var hour2
+    var minute2
+    var second2
+    var ccc=0
+
+    function trueHour(){
+        const hourp=prompt('请输入设置的 时（0~23）')
+        if(hourp==null){
+            ccc++
+            return
+        }
+        let reg=/^[0-9]$|^1[0-9]$|^2[0-3]$/
+        let result=reg.test(hourp)
+        if(result){
+            hour2=hourp
+        }else{
+            alert('错误输入')
+            trueHour()
+        }
+    }
+    trueHour()
+
+    function trueMinute(){
+        const minutep=prompt('请输入设置的 分（0~59）')
+        if(minutep==null){
+            ccc++
+            return
+        }
+        let reg=/^[0-9]$|^[1-5][0-9]$/
+        let result=reg.test(minutep)
+        if(result){
+            minute2=minutep
+        }else{
+            alert('错误输入')
+            trueMinute()
+        }
+    }
+    trueMinute()
+
+    function trueSecond(){
+        const secondp=prompt('请输入设置的 秒（0~59）')
+        if(secondp==null){
+            ccc++
+            return
+        }
+        let reg=/^[0-9]$|^[1-5][0-9]$/
+        let result=reg.test(secondp)
+        if(result){
+            second2=secondp
+        }else{
+            alert('错误输入')
+            trueSecond()
+        }
+    }
+    trueSecond()
+
+
+    if(ccc!==0){
+        return
+    }
+        clockTime.style.display="none"
+        const date=new Date()
+        const getHour=date.getHours()
+        const getMinute=date.getMinutes()
+        const getSecond=date.getSeconds()
+
+        let h=hour2-getHour
+        let m=minute2-getMinute
+        let s=second2-getSecond
+
+            if(s<0){
+                s=s+60
+                m=m-1
+            }
+            if(m<0){
+                m=m+60
+                h=h-1
+            }
+            if(h<0){
+                h=h+24
+            }
+            
+        const xxx=setTimeout(()=>{
+            document.getElementById("audio").play();
+        },h*3600000+m*60000+s*1000)
+
+        endAlice.style.display="none"
+
+    var endClock=document.createElement("button")
+    endClock.style.height=20+"px"
+    endClock.style.width=80+"px"
+    document.body.appendChild(endClock)
+        function endClockAppear(){
+            clearTimeout(xxx)
+            document.getElementById("audio").pause();
+            clockTime.style.display="inline"
+            endClock.style.display="none"
+            timing.style.display="inline"
+            endAlice3.style.display="none"
+            endAlice.style.display="inline"
+        }
+    endClock.onclick=endClockAppear
+    endClock.innerHTML="关闭闹钟"
+
+
+    const endAlice3=document.createElement("button")
+            endAlice3.style.height=20+"px"
+            endAlice3.style.width=120+"px"
+            document.body.appendChild(endAlice3)
+            function endAliceAppear3(){
+            clearInterval(endTime)
+            real.style.display="none"
+            call.style.display="inline"
+            realTime.style.display="none"
+            clockTime.style.display="none"
+            timing.style.display="none"
+            endAlice3.style.display="none"
+            endAlice.style.display="none"
+            endClock.style.display="none"
+            clearTimeout(xxx)
+            document.getElementById("audio").pause();
+            timing.style.display="none"
+
+            alert('邦邦咔邦,Alice任务完成！')
+        }
+        aliceAppear.style.display="none"
+        timing.style.display="none"
+
+
+        endAlice3.onclick=endAliceAppear3
+        endAlice3.innerHTML="再见,Alice"
+    }
+
+    clockTime.onclick=clockTimeAppear
+    clockTime.innerHTML="闹钟"
+
+
+        const timing=document.createElement("button")
+        timing.style.height=20+"px"
+        timing.style.width=50+"px"
+        document.body.appendChild(timing)
+        function timingAppear(){
+            timing.style.display="none"
+            clockTime.style.display="none"
+            timeBox=document.createElement('button')
+            timeBox.style.height=50+"px"
+            timeBox.style.width=150+"px"
+            document.body.appendChild(timeBox)
+            timeBox.onclick=timeMachine
+            endAlice.style.display="none"
+        }
+        timing.onclick=timingAppear
+        timing.innerHTML="计时器"
+
+        const endAlice=document.createElement("button")
+        endAlice.style.height=20+"px"
+        endAlice.style.width=120+"px"
+        document.body.appendChild(endAlice)
+        function endAliceAppear(){
+            clearInterval(endTime)
+            real.style.display="none"
+            call.style.display="inline"
+            realTime.style.display="none"
+            clockTime.style.display="none"
+            timing.style.display="none"
+            endAlice.style.display="none"
+
+            alert('邦邦咔邦,Alice任务完成！')
+            aliceAppear.style.display="none"
+        }
+
+        endAlice.onclick=endAliceAppear
+        endAlice.innerHTML="再见,Alice"
+    
+    
+     
+
+        function timeMachine(){
+            if(n>=1){
+            stop.style.display="none"
+            Continue.style.display="none"
+            again.style.display="none"
+            }
+        n++;
+        clearInterval(start)
+        start=setInterval(()=>{
+        num++
+        timeBox.innerHTML=parseInt(num/360000)+"时"+parseInt((num-360000*parseInt(num/360000))/6000)+"min"+parseInt((num-6000*parseInt((num-360000*parseInt(num/360000))/6000)-360000*parseInt(num/360000))/100)+"s"+" "+(num-360000*parseInt(num/360000)-6000*parseInt((num-360000*parseInt(num/360000))/6000)-100*parseInt((num-6000*parseInt((num-360000*parseInt(num/360000))/6000)-360000*parseInt(num/360000))/100))+"*10ms"
+        },10)
+        var stop=document.createElement("button")
+        stop.style.height=30+"px"
+        stop.style.width=50+"px"
+        stop.innerHTML="暂停"
+        document.body.appendChild(stop)
+        function stopTiming(){
+            clearInterval(start)
+        }
+        stop.onclick=stopTiming
+
+        var Continue=document.createElement("button")
+        Continue.style.height=30+"px"
+        Continue.style.width=50+"px"
+        Continue.innerHTML="继续"
+        document.body.appendChild(Continue)
+        function continueTiming(){
+            stop.style.display="none"
+            Continue.style.display="none"
+            again.style.display="none"
+            close.style.display="none"
+            endAlice2.style.display="none"
+            n=0;
+            timeMachine()
+            n++;
+        }
+        Continue.onclick=continueTiming
+
+        var again=document.createElement("button")
+        again.style.height=30+"px"
+        again.style.width=60+"px"
+        again.innerHTML="重新计时"
+        document.body.appendChild(again)
+        function againTiming(){
+            num=0
+            stop.style.display="none"
+            Continue.style.display="none"
+            again.style.display="none"
+            close.style.display="none"
+            endAlice2.style.display="none"
+            n=0;
+            timeMachine()
+            n++;
+        }
+        again.onclick=againTiming
+
+        var close=document.createElement("button")
+            close.style.height=30+"px"
+            close.style.width=50+"px"
+            close.innerHTML="关闭"
+            document.body.appendChild(close)
+            function closeTiming(){
+            clearInterval(start)
+            num=0
+            stop.style.display="none"
+            Continue.style.display="none"
+            again.style.display="none"
+            close.style.display="none"
+            timeBox.style.display="none"
+            timing.style.display="inline"
+            endAlice.style.display="inline"
+            endAlice2.style.display="none"
+            clockTime.style.display="inline"
+            n=0;
+        }
+        close.onclick=closeTiming
+
+            endAlice.style.display="none"
+            const endAlice2=document.createElement("button")
+            endAlice2.style.height=20+"px"
+            endAlice2.style.width=120+"px"
+            document.body.appendChild(endAlice2)
+            function endAliceAppear2(){
+            clearInterval(endTime)
+            real.style.display="none"
+            call.style.display="inline"
+            realTime.style.display="none"
+            clockTime.style.display="none"
+            timing.style.display="none"
+            endAlice2.style.display="none"
+            stop.style.display="none"
+            Continue.style.display="none"
+            again.style.display="none"
+            close.style.display="none"
+            timeBox.style.display="none"
+            clockTime.style.display="none"
+
+            alert('邦邦咔邦,Alice任务完成!')
+            aliceAppear.style.display="none"
+        }
+
+        clockTime.style.display="none"
+
+        endAlice2.onclick=endAliceAppear2
+        endAlice2.innerHTML="再见,Alice"
+     }
+
+    }
+        call.onclick = callAlice
+
+
+
+        const dance=document.getElementById('video')
+        dance.style.display="none"
+        const aliceDance=document.createElement('button')
+        aliceDance.style.height=30+"px"
+        aliceDance.style.width=200+"px"
+        document.body.appendChild(aliceDance)
+
+        function ddd(){
+            dance.style.display="block"
+            aliceDance.style.display="none"
+            const stopAlice=document.createElement("button")
+            stopAlice.style.height=30+"px"
+            stopAlice.style.width=80+"px"
+            document.body.appendChild(stopAlice)
+            function aliceStop(){
+                dance.style.display="none"
+                stopAlice.style.display="none"
+                aliceDance.style.display="inline"
+                const aDance=document.getElementById('aDance')
+                aDance.pause()
+            }
+            stopAlice.onclick=aliceStop
+            stopAlice.innerHTML="关闭视频"
+        }
+        aliceDance.onclick=ddd
+        aliceDance.innerHTML="彩蛋：解❤压❤小❤视❤频"
+
+</script>
+</html>
+
+
